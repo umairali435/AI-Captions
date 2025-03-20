@@ -1,0 +1,2 @@
+/Users/umairali/Documents/development/personal_projects/AI-Captions/android/app/.cxx/RelWithDebInfo/2jmw3og3/x86/CMakeFiles/edit_cache.dir
+/Users/umairali/Documents/development/personal_projects/AI-Captions/android/app/.cxx/RelWithDebInfo/2jmw3og3/x86/CMakeFiles/rebuild_cache.dir

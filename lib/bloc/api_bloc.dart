@@ -57,12 +57,12 @@ class ApiBloc extends Bloc<ApiEvent, ApiState> {
   ApiBloc(this.apiService) : super(ApiInitial()) {
     on<FetchDataEvent>((event, emit) async {
       emit(ApiLoading());
-      // try {
-      final response = await apiService.fetchData(event.prompt);
-      emit(ApiLoaded(GeneratedCaptionModel.fromJson(response.data)));
-      // } catch (e) {
-      //   emit(ApiError(e.toString()));
-      // }
+      try {
+        final response = await apiService.fetchData(event.prompt);
+        emit(ApiLoaded(GeneratedCaptionModel.fromJson(response.data)));
+      } catch (e) {
+        emit(const ApiError("Some Error occured, please try again"));
+      }
     });
   }
 }

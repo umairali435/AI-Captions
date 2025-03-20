@@ -3,11 +3,12 @@ import 'package:aicaptions/models/hastags_catption_model.dart';
 import 'package:aicaptions/res/app_colors.dart';
 import 'package:aicaptions/res/app_constants.dart';
 import 'package:aicaptions/screens/generated_hashtags.dart';
+import 'package:aicaptions/services/url_launcher_service.dart';
 import 'package:aicaptions/widgets/copy_button.dart';
-import 'package:aicaptions/widgets/custom_app_bar.dart';
 import 'package:aicaptions/widgets/custom_button.dart';
 import 'package:aicaptions/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -26,16 +27,47 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Hashtags & Captions",
+          style: TextStyle(
+            color: AppColors.whiteColor,
+            fontSize: 16.0,
+          ),
+        ),
+        backgroundColor: AppColors.secondaryColor,
+        leading: PopupMenuButton<String>(
+          icon: const Icon(
+            LucideIcons.settings,
+            color: AppColors.whiteColor,
+          ),
+          onSelected: (value) async {
+            if (value == 'privacy_policy') {
+              await UrlLauncherService.launchURL(
+                  "https://aihashtaggenerator.blogspot.com/2024/02/ai-hashtag-generator.html");
+            } else if (value == 'support') {
+              await UrlLauncherService.launchURL(
+                  "https://aihashtaggenerator.blogspot.com/2025/03/ai-caption-hashtags-support.html");
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem(
+                value: 'privacy_policy',
+                child: Text('Privacy Policy'),
+              ),
+              const PopupMenuItem(
+                value: 'support',
+                child: Text('Support'),
+              ),
+            ];
+          },
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(
-              leadingIcon: LucideIcons.settings,
-              onPressedLeading: () {},
-              onPressedTrailing: () {},
-              title: "Hashtags & Captions",
-              trailingIcon: LucideIcons.crown,
-            ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(14.0),
@@ -88,14 +120,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             isLoading: state is ApiLoading,
                             label: "Generate",
                             onTap: () {
-                              context.read<ApiBloc>().add(FetchDataEvent(AppConstants.prompt(category: _controller.text.trim())));
+                              context.read<ApiBloc>().add(
+                                    FetchDataEvent(
+                                      AppConstants.prompt(
+                                        category: _controller.text.trim(),
+                                      ),
+                                    ),
+                                  );
                             },
                           ),
                           const Gap(10.0),
                           if (_statusMessage.isNotEmpty)
                             Text(
                               _statusMessage,
-                              style: const TextStyle(color: AppColors.whiteColor),
+                              style:
+                                  const TextStyle(color: AppColors.whiteColor),
                             ),
                         ],
                       );
@@ -165,13 +204,26 @@ class HashtagsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         color: AppColors.secondaryColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         children: [
-          CopyButton(onTap: () {}),
+          CopyButton(
+            onTap: () async {
+              Clipboard.setData(
+                      ClipboardData(text: hashtags?.hashtags?.join(" ") ?? ""))
+                  .then((_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Copied to clipboard')),
+                  );
+                }
+              });
+            },
+          ),
           const Gap(10.0),
           Wrap(
             spacing: 8.0,
@@ -204,13 +256,13 @@ class HashtagsContainer extends StatelessWidget {
 }
 
 class CaptionContainer extends StatelessWidget {
-  const CaptionContainer({super.key});
+  final String caption;
+  const CaptionContainer({super.key, required this.caption});
 
   @override
   Widget build(BuildContext context) {
-    const caption = "This is a sample caption text generated for the user.";
-
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: AppColors.secondaryColor,
@@ -218,11 +270,21 @@ class CaptionContainer extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CopyButton(onTap: () {}),
+          CopyButton(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: caption)).then((_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Copied to clipboard')),
+                  );
+                }
+              });
+            },
+          ),
           const Gap(10.0),
-          const Text(
+          Text(
             caption,
-            style: TextStyle(color: AppColors.whiteColor),
+            style: const TextStyle(color: AppColors.whiteColor),
           ),
         ],
       ),

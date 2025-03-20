@@ -11,7 +11,14 @@ class GeneratedCaptionModel {
   List<Choices>? choices;
   Usage? usage;
 
-  GeneratedCaptionModel({this.id, this.provider, this.model, this.object, this.created, this.choices, this.usage});
+  GeneratedCaptionModel(
+      {this.id,
+      this.provider,
+      this.model,
+      this.object,
+      this.created,
+      this.choices,
+      this.usage});
 
   GeneratedCaptionModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -57,7 +64,8 @@ class Choices {
     logprobs = json['logprobs'];
     finishReason = json['finish_reason'];
     index = json['index'];
-    message = json['message'] != null ? Message.fromJson(json['message']) : null;
+    message =
+        json['message'] != null ? Message.fromJson(json['message']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -81,8 +89,9 @@ class Message {
 
   Message.fromJson(Map<String, dynamic> json) {
     role = json['role'];
-    content =
-        (json['content'] != null && json['content'] != "") ? HashTagsCaptionModel.fromJson(jsonDecode(json['content'])) : HashTagsCaptionModel();
+    content = (json['content'] != null && json['content'] != "")
+        ? HashTagsCaptionModel.fromJson(jsonDecode(json['content']))
+        : HashTagsCaptionModel();
     refusal = json['refusal'];
   }
 

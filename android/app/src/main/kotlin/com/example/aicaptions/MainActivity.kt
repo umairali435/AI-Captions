@@ -1,4 +1,4 @@
-package com.example.aicaptions
+package com.extendztech.hashtaggenerator
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -56,14 +56,14 @@ class Hashtags {
 class Captions {
   String? categoryTitle;
   bool? isPremium;
-  List<dynamic>? captions;
+  String? captions;
 
   Captions({this.categoryTitle, this.isPremium, this.captions});
 
   Captions.fromJson(Map<String, dynamic> json) {
     categoryTitle = json['categoryTitle'];
     isPremium = json['isPremium'];
-    captions = json['captionList'];
+    captions = json['caption'];
   }
 
   Map<String, dynamic> toJson() {
